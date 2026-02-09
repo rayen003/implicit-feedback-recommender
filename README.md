@@ -1,6 +1,53 @@
-HW4: Recommender System with Implicit Feedback
-Part 1 — Building a Baseline Recommender System
-This assignment introduces you to recommender systems built on implicit feedback—data that reflects user behavior (clicks, views, likes) rather than explicit ratings. You will work with a subset of the Tenrec (Tencent) dataset and build simple, interpretable baseline recommendation models.
+Implicit Feedback Recommender System
+===================================
+
+This repository contains a small end‑to‑end **implicit‑feedback recommender system** built on a subset of the Tenrec (Tencent) interaction dataset.
+It focuses on modeling user behavior such as clicks/views (implicit signals) rather than explicit ratings, and compares simple baselines with a learned matrix factorization model.
+
+### Project overview
+
+- **Goal**: Recommend the next item a user is likely to interact with, given their historical interaction sequence.
+- **Data**: Subset of the Tenrec dataset (`task_2.csv`), preprocessed into `train.csv` and `test.csv`.
+- **Core ideas**:
+  - Sequential interaction logs and leave‑one‑out evaluation.
+  - Implicit feedback (positive‑only interactions) and negative sampling.
+  - Learnable user/item embeddings with a dot‑product scoring model.
+
+### Main components
+
+- **Data preprocessing**
+  - Clean raw logs and keep only users/items with enough interactions.
+  - Build a per‑user interaction history and assign timestamps via cumulative counts.
+  - Create a leave‑one‑out split: all but the last interaction for training, last interaction for testing.
+
+- **Baseline recommenders**
+  - **Popularity model**: recommends globally most‑frequent items the user has not seen.
+  - **Item–item similarity model**: uses co‑occurrence of items within user histories to recommend similar items.
+
+- **Personalized model**
+  - Negative sampling over all items to create (user, item, label) pairs.
+  - Train a **matrix factorization** model with learned user and item embeddings.
+  - Optimize with binary cross‑entropy loss and evaluate using top‑K recommendation metrics.
+
+### Repository structure
+
+- `implicit_feedback_recommender.ipynb` – main notebook with preprocessing, baselines, MF model, and evaluation.
+- `train.csv` – processed training interactions.
+- `test.csv` – processed test interactions (leave‑one‑out per user).
+- `task_2.csv.zip` – compressed raw interaction data subset.
+
+### How to run
+
+1. Create a Python environment with common data‑science libraries (e.g. `pandas`, `numpy`, `matplotlib`, `torch`).
+2. Place the data files from this repo in the same directory as the notebook.
+3. Open `implicit_feedback_recommender.ipynb` in Jupyter or VS Code and run the cells from top to bottom.
+
+The notebook will:
+
+- Build the interaction dataset and train/test split.
+- Fit popularity and item–item baselines.
+- Train a matrix factorization model with embeddings.
+- Report **Recall@K** for multiple values of \(K\) to compare models.
 
 Learning Objectives
 By the end of Part 1, you will be able to:
